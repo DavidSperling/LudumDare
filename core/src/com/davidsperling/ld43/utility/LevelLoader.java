@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.davidsperling.ld43.utility.LevelLoader.MapChars.BLAST_ANT_LIMIT_PARAMETER;
 import static com.davidsperling.ld43.utility.LevelLoader.MapChars.LEMMING_COUNT_PARAMETER;
+import static com.davidsperling.ld43.utility.LevelLoader.MapChars.LEMMING_REQUIREMENT_PARAMETER;
 
 public class LevelLoader {
     public static class MapChars {
@@ -38,6 +39,7 @@ public class LevelLoader {
 
         public static String LEMMING_COUNT_PARAMETER = "lemmingCount";
         public static String BLAST_ANT_LIMIT_PARAMETER = "blastAntLimit";
+        public static String LEMMING_REQUIREMENT_PARAMETER = "lemmingRequirement";
     }
 
     public static void loadLevel(String levelName, LevelScreen levelScreen) {
@@ -112,9 +114,9 @@ public class LevelLoader {
         if (LEMMING_COUNT_PARAMETER.equals(parameter[0])) {
             levelScreen.setStartingLemmingCount(Integer.parseInt(parameter[1]));
         } else if (BLAST_ANT_LIMIT_PARAMETER.equals(parameter[0])) {
-
-            System.out.println("Blast ant limit " + parameter[1]);
             levelScreen.setBlastAntLimit(Integer.parseInt(parameter[1]));
+        } else if (LEMMING_REQUIREMENT_PARAMETER.equals(parameter[0])) {
+            levelScreen.setLemmingRequirement(Integer.parseInt(parameter[1]));
         }
     }
 }

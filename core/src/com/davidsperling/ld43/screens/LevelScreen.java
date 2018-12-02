@@ -1,6 +1,7 @@
 package com.davidsperling.ld43.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,6 +31,8 @@ public class LevelScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
 
+    private final String levelName;
+
     private List<List<GamePiece>> levelList;
 
     private static final String BACKGROUND_TEXTURE_FILE_PATH = "images/background/greenBrownBack.png";
@@ -40,6 +43,7 @@ public class LevelScreen implements Screen {
     private LemmingAntSpawn lemmingAntSpawn = null;
     private List<LemmingAnt> lemmingAnts = new ArrayList<LemmingAnt>();
     private int lemmingAntsCleared = 0;
+    private int lemmingRequirement = 0;
     private ExitDoor exit = null;
 
     private int startingLemmingCount = -1;
@@ -49,6 +53,7 @@ public class LevelScreen implements Screen {
 
     public LevelScreen(final LD43 game, String levelName) {
         this.game = game;
+        this.levelName = levelName;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT);
         viewport = new FitViewport(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, camera);
@@ -74,6 +79,14 @@ public class LevelScreen implements Screen {
     }
 
     public void updateGame(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            game.setScreen(new LevelScreen(game, levelName));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (lemmingAntsCleared >= lemmingRequirement) {
+                game.loadNextLevel();
+            }
+        }
+
         if (blastAntSpawn != null) {
             blastAntSpawn.update(delta);
         }
@@ -135,15 +148,24 @@ public class LevelScreen implements Screen {
         for (LemmingAnt lemmingAnt : lemmingAnts) {
             lemmingAnt.draw(game.batch, 1.0f);
         }
+        game.batch.end();
 
         drawScore();
-
-        game.batch.end();
     }
 
     public void drawScore() {
-        System.out.println(game.font);
-        game.font.draw(game.batch, "Remaining blast ants:" + blastAntLimit, 0, 0);
+        game.batch.begin();
+        game.font.getData().setScale(2.0f);
+        game.font.draw(game.batch, "Remaining blast ants:" + blastAntSpawn.getRemainingAnts(), Constants.GRID_UNIT / 2.0f, camera.position.y + camera.viewportHeight / 2.0f - Constants.GRID_UNIT / 2.0f);
+
+        String completionString = "Completion: " + lemmingAntsCleared + "/" + lemmingRequirement;
+        if (lemmingAntsCleared >= lemmingRequirement) {
+            completionString += " (Press 'Enter' to continue...)";
+        }
+
+        game.font.draw(game.batch, completionString, camera.viewportWidth / 2.0f, camera.position.y + camera.viewportHeight / 2.0f - Constants.GRID_UNIT / 2.0f);
+        game.font.draw(game.batch, "Press 'r' to reset level", Constants.GRID_UNIT / 2.0f, camera.position.y - camera.viewportHeight / 2.0f + Constants.GRID_UNIT / 2.0f);
+        game.batch.end();
     }
 
     @Override
@@ -272,5 +294,13 @@ public class LevelScreen implements Screen {
 
     public void setBlastAntLimit(int blastAntLimit) {
         this.blastAntLimit = blastAntLimit;
+    }
+
+    public int getLemmingRequirement() {
+        return lemmingRequirement;
+    }
+
+    public void setLemmingRequirement(int lemmingRequirement) {
+        this.lemmingRequirement = lemmingRequirement;
     }
 }

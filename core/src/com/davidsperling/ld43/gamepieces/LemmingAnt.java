@@ -47,6 +47,7 @@ public class LemmingAnt extends Ant {
         super.update(delta);
         if (!gridMover.isMoving()) {
             if (levelScreen.getExit().getGridX() == this.getGridX() && levelScreen.getExit().getGridY() == this.getGridY()) {
+                levelScreen.lemmingAntCleared();
                 this.die();
             }
         }
@@ -69,7 +70,7 @@ public class LemmingAnt extends Ant {
     public static void unload() {
         if (loaded) {
             lemmingAntTexture0.dispose();
-            lemmingAntTexture0.dispose();
+            lemmingAntTexture1.dispose();
         }
     }
 

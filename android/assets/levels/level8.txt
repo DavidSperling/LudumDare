@@ -8,3 +8,6 @@
 #  ###*#########   #
 #      3           #
 ####################
+?lemmingCount=10
+?lemmingRequirement=10
+?blastAntLimit=3
