@@ -1,15 +1,13 @@
 package com.davidsperling.ld43;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.davidsperling.ld43.screens.AntFact;
 import com.davidsperling.ld43.screens.LevelScreen;
-import com.davidsperling.ld43.screens.MainMenuScreen;
 import com.davidsperling.ld43.screens.TitleScreen;
+import com.davidsperling.ld43.screens.Transition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +17,8 @@ public class LD43 extends Game {
 
     public static final String LEVEL_PREFIX = "Level";
     public static final String TITLE_SCREEN_PREFIX = "TitleScreen";
+    public static final String TRANSITION_PREFIX = "Transition";
+    public static final String ANT_FACT_PREFIX = "AntFact";
 
 	public SpriteBatch batch;
 	public BitmapFont font;
@@ -60,7 +60,7 @@ public class LD43 extends Game {
 
     public void loadNextLevel() {
 	    currentLevelNumber++;
-        if (currentLevelNumber > levels.size()) {
+        if (currentLevelNumber >= levels.size()) {
             currentLevelNumber = 0;
         }
         goToLevel(currentLevelNumber);
@@ -70,8 +70,17 @@ public class LD43 extends Game {
 	    String[] splitLevelLine = levels.get(levelNumber).split(":");
         if (TITLE_SCREEN_PREFIX.equals(splitLevelLine[0])) {
             this.setScreen(new TitleScreen(this));
+        } else if (TRANSITION_PREFIX.equals(splitLevelLine[0])) {
+            this.setScreen(new Transition(this));
+        } else if (ANT_FACT_PREFIX.equals(splitLevelLine[0])) {
+            this.setScreen(new AntFact(this, splitLevelLine[1]));
         } else if (LEVEL_PREFIX.equals(splitLevelLine[0])) {
             this.setScreen(new LevelScreen(this, splitLevelLine[1]));
         }
+    }
+
+    public void escapeToTitle() {
+        currentLevelNumber = 0;
+	    goToLevel(0);
     }
 }

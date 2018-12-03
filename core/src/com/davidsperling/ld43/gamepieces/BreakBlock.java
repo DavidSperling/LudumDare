@@ -12,6 +12,7 @@ public class BreakBlock extends Block {
 
     private static Texture texture;
     private static boolean loaded = false;
+    private boolean isFalling = false;
 
     private GridMover gridMover;
 
@@ -30,22 +31,26 @@ public class BreakBlock extends Block {
     public static void unload() {
         if (loaded) {
             texture.dispose();
+            loaded = false;
         }
     }
 
     @Override
     public void update(float delta) {
         if (!gridMover.isMoving()) {
-            if (!levelScreen.pieceAtPosition(getGridX(), getGridY() - 1).isSolid() &&
+            if (!levelScreen.pieceAtPosition(getGridX(), getGridY() - 1).isSolid() && (getGridY() - 1) > 0 &&
+                    (isFalling ||
                     !levelScreen.pieceAtPosition(getGridX() + 1, getGridY()).isSolid() &&
                     !levelScreen.pieceAtPosition(getGridX(), getGridY() + 1).isSolid() &&
-                    !levelScreen.pieceAtPosition(getGridX() - 1, getGridY()).isSolid()) {
-
+                    !levelScreen.pieceAtPosition(getGridX() - 1, getGridY()).isSolid())) {
+                isFalling = true;
                 levelScreen.pieceAtPosition(getGridX(), getGridY() - 1).blast();
                 levelScreen.setAtPosition(getGridX(), getGridY() - 1, this);
                 levelScreen.destroyAtPosition(getGridX(), getGridY());
                 this.gridY -= 1;
                 gridMover.moveDown();
+            } else {
+                isFalling = false;
             }
         }
         gridMover.update(delta);

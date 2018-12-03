@@ -113,4 +113,16 @@ public class GridMover {
     public boolean isMoving() {
         return (state == State.MOVING);
     }
+
+    public int getTargetGridX() {
+        return targetGridX;
+    }
+
+    public int getTargetGridY() {
+        return targetGridY;
+    }
+
+    public float getTargetRotation() {
+        return targetRotation;
+    }
 }

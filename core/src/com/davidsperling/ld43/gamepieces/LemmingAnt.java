@@ -19,7 +19,7 @@ public class LemmingAnt extends Ant {
     private static final float MOVE_SPEED = 128;
     private static final float ROTATION_SPEED = 180;
 
-    private Direction moveDirection = Direction.RIGHT;
+    private Direction moveDirection;
 
     private static boolean loaded = false;
 
@@ -44,11 +44,37 @@ public class LemmingAnt extends Ant {
 
     @Override
     public void update(float delta) {
+        boolean wasFalling = false;
+        if (isFalling) {
+            wasFalling = true;
+            if (!gridMover.isMoving()) {
+                isFalling = false;
+            }
+        }
         super.update(delta);
+        if (wasFalling && !isFalling) {
+            die();
+        }
         if (!gridMover.isMoving()) {
             if (levelScreen.getExit().getGridX() == this.getGridX() && levelScreen.getExit().getGridY() == this.getGridY()) {
                 levelScreen.lemmingAntCleared();
                 this.die();
+            } else if (levelScreen.pieceAtPosition(gridX, gridY).getClass() == StationaryAttackAnt.class){
+                this.die();
+            } else if (getObjectAtNextPosition() instanceof ShieldAnt) {
+                if (moveDirection == Direction.RIGHT) {
+                    forward = Direction.LEFT;
+                    moveDirection = Direction.LEFT;
+                } else {
+                    forward = Direction.RIGHT;
+                    moveDirection = Direction.RIGHT;
+                }
+            }
+        }
+
+        for (MovingAttackAnt movingAttackAnt : levelScreen.getMovingAttackAnts()) {
+            if (movingAttackAnt.getCollisionCenter().dst(this.getCollisionCenter()) < Constants.GRID_UNIT / 3.0f) {
+                die();
             }
         }
     }
@@ -71,6 +97,7 @@ public class LemmingAnt extends Ant {
         if (loaded) {
             lemmingAntTexture0.dispose();
             lemmingAntTexture1.dispose();
+            loaded = false;
         }
     }
 
@@ -97,8 +124,13 @@ public class LemmingAnt extends Ant {
 
     @Override
     public void fall() {
-        System.out.println("Falling...");
-        die();
+        isFalling = true;
+        if (!gridMover.isMoving() && gridY > 0) {
+            gridMover.setTargetRotation(0);
+            gridY -= 1;
+            gridMover.moveDown();
+            feet = Direction.DOWN;
+        }
     }
 
     @Override

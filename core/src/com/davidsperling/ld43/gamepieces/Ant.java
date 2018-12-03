@@ -3,6 +3,9 @@ package com.davidsperling.ld43.gamepieces;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.davidsperling.ld43.Constants;
 import com.davidsperling.ld43.screens.LevelScreen;
 
 public abstract class Ant extends GamePiece {
@@ -20,15 +23,25 @@ public abstract class Ant extends GamePiece {
     protected Direction feet = Direction.DOWN;
     protected Direction forward = Direction.RIGHT;
 
-    private boolean isDead = false;
+    protected boolean isDead = false;
+    protected boolean isFalling = false;
 
     protected GridMover gridMover;
     public Ant(LevelScreen levelScreen, int gridX, int gridY, Texture texture0, Texture texture1) {
         super(levelScreen, gridX, gridY);
         this.setRotation(0);
-        this.textureRegion0 = new TextureRegion(texture0);
-        this.textureRegion1 = new TextureRegion(texture1);
+        if (texture0 != null) {
+            this.textureRegion0 = new TextureRegion(texture0);
+        } else {
+            this.textureRegion0 = null;
+        }
+        if (texture1 != null) {
+            this.textureRegion1 = new TextureRegion(texture1);
+        } else {
+            this.textureRegion1 = null;
+        }
         gridMover = new GridMover(this, getMoveSpeed(), getRotationSpeed());
+
     }
     public abstract float getMoveSpeed();
     public abstract float getRotationSpeed();
@@ -185,6 +198,10 @@ public abstract class Ant extends GamePiece {
         }
     }
 
+    public GamePiece getObjectAtNextPosition() {
+        return (new AntSense(levelScreen, gridX, gridY, feet, forward)).getBlockAtNextPosition();
+    }
+
     public void drawAnt(Batch batch) {
 
         TextureRegion textureRegion = getAnimationFrame();
@@ -212,6 +229,9 @@ public abstract class Ant extends GamePiece {
         if (gridMover.isMoving()) {
             animationOffset += delta;
         } else {
+            if (levelScreen.pieceAtPosition(gridX, gridY) instanceof WaterBlock) {
+                this.die();
+            }
             GamePiece stoodOnBlock = getStoodOnBlock();
             if (stoodOnBlock == null || stoodOnBlock instanceof EmptySpace) {
                 fall();
@@ -219,6 +239,18 @@ public abstract class Ant extends GamePiece {
                 CrumbleBlock crumbleBlock = (CrumbleBlock) stoodOnBlock;
                 crumbleBlock.stepOn();
             }
+        }
+
+        if (levelScreen.getPangolin() != null) {
+            PangolinBody pangolin = levelScreen.getPangolin();
+            Vector2 tongueTip = pangolin.getTongueTipLocation().cpy();
+            if (tongueTip.dst(getCollisionCenter()) < Constants.GRID_UNIT / 4.0f) {
+                die();
+            }
+        }
+
+        if (levelScreen.pieceAtPosition(gridX, gridY).isSolid()) {
+            die();
         }
     }
 
@@ -257,6 +289,22 @@ public abstract class Ant extends GamePiece {
         } else if (direction == Direction.LEFT) {
             this.setRotation(270);
         }
+    }
+
+    public void findFooting() {
+        feet = findGround();
+        setRotation(feet);
+    }
+
+    public Vector2 getCollisionCenter() {
+        float antCenterX = this.getX() + Constants.GRID_UNIT / 2.0f;
+        float antCenterY = this.getY() + Constants.GRID_UNIT / 2.0f;
+        float theta = this.getRotation() + 270;
+
+        float xOffset = MathUtils.sin(theta) * Constants.GRID_UNIT / 4.0f;
+        float yOffset = MathUtils.cos(theta) * Constants.GRID_UNIT / 4.0f;
+
+        return new Vector2(antCenterX + xOffset, antCenterY - yOffset);
     }
 
     public void fall() {

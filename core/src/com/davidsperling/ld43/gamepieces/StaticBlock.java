@@ -28,6 +28,7 @@ public class StaticBlock extends Block {
         if (loaded) {
             texture.dispose();
             grassTexture.dispose();
+            loaded = false;
         }
     }
 

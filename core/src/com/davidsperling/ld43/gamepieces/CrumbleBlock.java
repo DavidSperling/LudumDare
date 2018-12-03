@@ -3,7 +3,6 @@ package com.davidsperling.ld43.gamepieces;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.davidsperling.ld43.Constants;
 import com.davidsperling.ld43.screens.LevelScreen;
 
 public class CrumbleBlock extends Block {
@@ -33,6 +32,7 @@ public class CrumbleBlock extends Block {
     public static void unload() {
         if (loaded) {
             texture.dispose();
+            loaded = false;
         }
     }
 

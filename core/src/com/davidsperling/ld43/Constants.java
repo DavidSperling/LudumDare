@@ -7,6 +7,8 @@ public class Constants {
 
     public static final float LEMMING_ANT_TICK = 1.0f;
     public static final float LEMMING_ANT_SPAWN_TICK = LEMMING_ANT_TICK * 2.0f;
+    public static final float MOVING_ATTACK_ANT_TICK = LEMMING_ANT_TICK / 1.5f;
+    public static final float PANGOLIN_TICK = LEMMING_ANT_TICK / 2.0f;
 
     public static final String LEVELS_FOLDER_PATH = "levels/";
 }

@@ -4,10 +4,10 @@
 #       *       ]  #
 #      +#          #
 #       #          #
-#      !#          #
+#      x#          #
 #      6#          #
 #       #          #
 ####################
-?lemmingCount=10
-?lemmingRequirement=10
-?blastAntLimit=3
+?lemmingCount=5
+?lemmingRequirement=5
+?blastAntLimit=5
