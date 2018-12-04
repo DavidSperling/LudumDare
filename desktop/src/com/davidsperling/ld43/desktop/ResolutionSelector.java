@@ -5,7 +5,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.DisplayMode;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -23,8 +22,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-
-import sun.security.krb5.internal.crypto.Des;
 
 public class ResolutionSelector extends JFrame implements ActionListener {
     private enum ActionCommand {

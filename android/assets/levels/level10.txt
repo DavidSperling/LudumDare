@@ -6,8 +6,8 @@
 #     w            #
 # #**%# p      #*##*
 #     # #      #   #
-#  #  # *      #  $#
+# 5#  # *      #  $#
 ###~~###############
 ?lemmingCount=5
 ?lemmingRequirement=5
-?blastAntLimit=5
+?blastAntLimit=3

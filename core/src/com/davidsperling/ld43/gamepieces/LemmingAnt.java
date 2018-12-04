@@ -1,6 +1,7 @@
 package com.davidsperling.ld43.gamepieces;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.davidsperling.ld43.Constants;
@@ -11,6 +12,8 @@ import java.util.List;
 public class LemmingAnt extends Ant {
     private static final String TEXTURE_FILE_PATH_0 = "images/ants/lemming/lemming0.png";
     private static final String TEXTURE_FILE_PATH_1 = "images/ants/lemming/lemming1.png";
+    private static final String DEATH_SOUND_FILE_PATH = "audio/sfx/antDie.wav";
+    private static Sound deathSound;
     private static Texture lemmingAntTexture0;
     private static Texture lemmingAntTexture1;
 
@@ -89,6 +92,7 @@ public class LemmingAnt extends Ant {
         if (!loaded) {
             lemmingAntTexture0 = new Texture(Gdx.files.internal(TEXTURE_FILE_PATH_0));
             lemmingAntTexture1 = new Texture(Gdx.files.internal(TEXTURE_FILE_PATH_1));
+            deathSound = Gdx.audio.newSound(Gdx.files.internal(DEATH_SOUND_FILE_PATH));
             loaded = true;
         }
     }
@@ -97,6 +101,7 @@ public class LemmingAnt extends Ant {
         if (loaded) {
             lemmingAntTexture0.dispose();
             lemmingAntTexture1.dispose();
+            deathSound.dispose();
             loaded = false;
         }
     }
@@ -136,5 +141,6 @@ public class LemmingAnt extends Ant {
     @Override
     public void die() {
         levelScreen.getLemmingAnts().remove(this);
+        deathSound.play();
     }
 }

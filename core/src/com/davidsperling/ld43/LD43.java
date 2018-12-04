@@ -2,6 +2,7 @@ package com.davidsperling.ld43;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.davidsperling.ld43.screens.AntFact;
@@ -73,7 +74,14 @@ public class LD43 extends Game {
         } else if (TRANSITION_PREFIX.equals(splitLevelLine[0])) {
             this.setScreen(new Transition(this));
         } else if (ANT_FACT_PREFIX.equals(splitLevelLine[0])) {
-            this.setScreen(new AntFact(this, splitLevelLine[1]));
+            AntFact newScreen = new AntFact(this, splitLevelLine[1]);
+            if (splitLevelLine.length >= 3) {
+                newScreen.setPlaysMusic(Boolean.parseBoolean(splitLevelLine[2]));
+                if (splitLevelLine.length >= 4) {
+                    newScreen.setCustomMusic(splitLevelLine[3]);
+                }
+            }
+            this.setScreen(newScreen);
         } else if (LEVEL_PREFIX.equals(splitLevelLine[0])) {
             this.setScreen(new LevelScreen(this, splitLevelLine[1]));
         }

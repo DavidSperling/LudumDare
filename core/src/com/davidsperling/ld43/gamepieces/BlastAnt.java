@@ -2,6 +2,7 @@ package com.davidsperling.ld43.gamepieces;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,8 @@ import com.davidsperling.ld43.screens.LevelScreen;
 public class BlastAnt extends Ant {
     private static final String TEXTURE_FILE_PATH_0 = "images/ants/blast/blast0.png";
     private static final String TEXTURE_FILE_PATH_1 = "images/ants/blast/blast1.png";
+    private static final String BLAST_SOUND_FILE_PATH = "audio/sfx/antExplode.wav";
+    private static Sound blastSound;
     private static final float MOVE_SPEED = 512;
     private static final float ROTATION_SPEED = 720;
     private static Texture blastAntTexture0;
@@ -74,6 +77,7 @@ public class BlastAnt extends Ant {
         if (!loaded) {
             blastAntTexture0 = new Texture(Gdx.files.internal(TEXTURE_FILE_PATH_0));
             blastAntTexture1 = new Texture(Gdx.files.internal(TEXTURE_FILE_PATH_1));
+            blastSound = Gdx.audio.newSound(Gdx.files.internal(BLAST_SOUND_FILE_PATH));
             loaded = true;
         }
     }
@@ -82,6 +86,7 @@ public class BlastAnt extends Ant {
         if (loaded) {
             blastAntTexture0.dispose();
             blastAntTexture1.dispose();
+            blastSound.dispose();
             loaded = false;
         }
     }
@@ -91,6 +96,7 @@ public class BlastAnt extends Ant {
         levelScreen.getEffectPieces().add(new Explosion(levelScreen, collisionCenter.x, collisionCenter.y));
         getStoodOnBlock().blast();
         levelScreen.setBlastAnt(null);
+        blastSound.play();
     }
 
     public void die() {

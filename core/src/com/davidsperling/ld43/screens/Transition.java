@@ -3,6 +3,7 @@ package com.davidsperling.ld43.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +18,9 @@ import com.davidsperling.ld43.LD43;
 public class Transition implements Screen {
     private static final String VERTEX_SHADER_PATH = "shaders/basic.vertex.glsl";
     private static final String FRAGMENT_SHADER_PATH = "shaders/tvStatic.fragment.glsl";
+    private static final String SOUND_FILE_PATH = "audio/sfx/whiteNoise.wav";
     private static final float LINGER_TIME = .3f;
+    private static Sound whiteNoise;
 
     private static final String BACKGROUND_TEXTURE_FILE_PATH = "images/titleScreen/titleBackground.png";
     private Texture backgroundTexture;
@@ -39,6 +42,8 @@ public class Transition implements Screen {
         camera.setToOrtho(false, Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT);
         viewport = new FitViewport(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, camera);
 
+        whiteNoise = Gdx.audio.newSound(Gdx.files.internal(SOUND_FILE_PATH));
+
         vertexShader = Gdx.files.internal(VERTEX_SHADER_PATH).readString();
         fragmentShader = Gdx.files.internal(FRAGMENT_SHADER_PATH).readString();
         ShaderProgram.pedantic = false;
@@ -50,6 +55,7 @@ public class Transition implements Screen {
 
     @Override
     public void show() {
+        whiteNoise.play();
     }
 
     @Override
@@ -100,7 +106,7 @@ public class Transition implements Screen {
 
     @Override
     public void hide() {
-
+        whiteNoise.stop();
     }
 
     @Override

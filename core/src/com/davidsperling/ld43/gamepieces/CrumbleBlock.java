@@ -1,12 +1,15 @@
 package com.davidsperling.ld43.gamepieces;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.davidsperling.ld43.screens.LevelScreen;
 
 public class CrumbleBlock extends Block {
     private static final String TEXTURE_FILE_PATH = "images/blocks/crumble.png";
+    private static final String SOUND_FILE_PATH = "audio/sfx/blockCrumble.wav";
+    private static Sound sound;
     private static final float MOVE_SPEED = 512;
     private static final float ROTATION_SPEED = 720;
     private static final float STARTING_CRUMBLE_TIMER = .25f;
@@ -25,6 +28,7 @@ public class CrumbleBlock extends Block {
     public static void load() {
         if (!loaded) {
             texture = new Texture(Gdx.files.internal(TEXTURE_FILE_PATH));
+            sound = Gdx.audio.newSound(Gdx.files.internal(SOUND_FILE_PATH));
             loaded = true;
         }
     }
@@ -33,6 +37,7 @@ public class CrumbleBlock extends Block {
         if (loaded) {
             texture.dispose();
             loaded = false;
+            sound.dispose();
         }
     }
 
@@ -60,5 +65,6 @@ public class CrumbleBlock extends Block {
 
     public void stepOn() {
         isCrumbling = true;
+        sound.play();
     }
 }

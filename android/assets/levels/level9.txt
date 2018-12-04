@@ -10,6 +10,6 @@
 ####################
 ?lemmingCount=5
 ?lemmingRequirement=5
-?blastAntLimit=5
+?blastAntLimit=2
 
 

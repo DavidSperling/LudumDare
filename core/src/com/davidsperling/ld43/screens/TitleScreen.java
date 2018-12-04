@@ -3,6 +3,7 @@ package com.davidsperling.ld43.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -12,6 +13,8 @@ import com.davidsperling.ld43.LD43;
 
 public class TitleScreen implements Screen {
     private static final String BACKGROUND_TEXTURE_FILE_PATH = "images/titleScreen/titleBackground.png";
+    private static final String MUSIC_FILE_PATH = "audio/music/GuitarAnts.mp3";
+    private static Music music;
     private Texture backgroundTexture;
     private final LD43 game;
     private OrthographicCamera camera;
@@ -27,6 +30,10 @@ public class TitleScreen implements Screen {
 
     @Override
     public void show() {
+        music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE_PATH));
+        music.setLooping(false);
+        music.setVolume(0.6f);
+        music.play();
     }
 
     @Override
@@ -62,11 +69,12 @@ public class TitleScreen implements Screen {
 
     @Override
     public void hide() {
-
+        music.stop();
     }
 
     @Override
     public void dispose() {
         backgroundTexture.dispose();
+        music.dispose();
     }
 }

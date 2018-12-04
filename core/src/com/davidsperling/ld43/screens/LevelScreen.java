@@ -3,6 +3,7 @@ package com.davidsperling.ld43.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,6 +48,8 @@ public class LevelScreen implements Screen {
     private List<List<GamePiece>> levelList;
 
     private static final String BACKGROUND_TEXTURE_FILE_PATH = "images/background/greenBrownBack.png";
+    private static final String MUSIC_FILE_PATH = "audio/music/LevelTheme.mp3";
+    private Music music;
     private Texture backgroundTexture;
 
     private BlastAnt blastAnt = null;
@@ -94,12 +97,16 @@ public class LevelScreen implements Screen {
         PangolinBody.load();
         Explosion.load();
         MapExtra.load();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE_PATH));
         backgroundTexture = new Texture(Gdx.files.internal(BACKGROUND_TEXTURE_FILE_PATH));
     }
 
     @Override
     public void show() {
-
+        music.setLooping(true);
+        music.setVolume(0.4f);
+        music.play();
     }
 
     public void updateGame(float delta) {
@@ -259,7 +266,7 @@ public class LevelScreen implements Screen {
 
     @Override
     public void hide() {
-
+        music.stop();
     }
 
     @Override
@@ -277,6 +284,7 @@ public class LevelScreen implements Screen {
         WaterBlock.unload();
         PangolinBody.unload();
         Explosion.unload();
+        music.dispose();
         backgroundTexture.dispose();
     }
 
